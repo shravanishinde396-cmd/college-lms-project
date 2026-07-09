@@ -1,0 +1,10 @@
+import express from 'express';
+import { createUser, deleteUser, getUsers, updateProfile } from '../controllers/userController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { authorize } from '../middleware/roleMiddleware.js';
+const router = express.Router();
+router.get('/', protect, authorize('admin'), getUsers);
+router.post('/', protect, authorize('admin'), createUser);
+router.put('/profile', protect, updateProfile);
+router.delete('/:id', protect, authorize('admin'), deleteUser);
+export default router;

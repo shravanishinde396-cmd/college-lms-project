@@ -1,0 +1,12 @@
+import express from 'express';
+import upload from '../utils/upload.js';
+import { createAssignment, getAssignments, getSubmissions, gradeSubmission, submitAssignment } from '../controllers/assignmentController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { authorize } from '../middleware/roleMiddleware.js';
+const router = express.Router();
+router.get('/', protect, getAssignments);
+router.get('/submissions/all', protect, authorize('faculty', 'teacher', 'admin'), getSubmissions);
+router.post('/', protect, authorize('faculty', 'teacher', 'admin'), upload.single('file'), createAssignment);
+router.post('/:id/submit', protect, authorize('student'), upload.single('file'), submitAssignment);
+router.put('/submissions/:id/grade', protect, authorize('faculty', 'teacher', 'admin'), gradeSubmission);
+export default router;
